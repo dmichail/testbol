@@ -4,6 +4,7 @@ package com.bol.interviews.kalaha.service;
 import com.bol.interviews.kalaha.dto.boardDto;
 import com.bol.interviews.kalaha.dto.updateBoardDto;
 import com.bol.interviews.kalaha.model.Board;
+import com.bol.interviews.kalaha.model.Game;
 import com.bol.interviews.kalaha.model.Pit;
 import com.bol.interviews.kalaha.model.Player;
 import com.bol.interviews.kalaha.repository.boardRepository;
@@ -49,14 +50,22 @@ public class boardService {
     void updateBoard(updateBoardDto updateBoardDto){
         Board currBoard = getBoardbyId(updateBoardDto.getBoardId()).get();
 
-        currBoard.setPits1(convertPitListToDB(getPlayer1Pits(currBoard.getBoardId())));
-        currBoard.setPits2(convertPitListToDB(getPlayer2Pits(currBoard.getBoardId())));
+        currBoard.setPits1(convertPitListToDB(updateBoardDto.getPitsP1()));
+        currBoard.setPits2(convertPitListToDB(updateBoardDto.getPitsP2()));
         currBoard.setK1(updateBoardDto.getKalahaP1());
         currBoard.setK2(updateBoardDto.getKalahaP2());
 
         boardRepository.save(currBoard);
 
     }
+
+
+
+
+
+
+
+
 
     List<Pit> getPlayer1Pits(Long boardId) {
         Optional<Board> current_board = boardRepository.findById(boardId);

@@ -38,6 +38,37 @@ public class gameService {
     }
 
 
+    //POST METHOD
+    Game pickStonesAndSow(Long gameId, Long player1, Integer pitId){
+        Game game = getGameById(gameId);
+
+
+
+
+        return game;
+    }
+
+
+   //200 : Return "Game" (see above)
+  //405 : if it is not player's turn
+
+
+
+   /*
+   Request :
+    POST /game/{pitId}
+
+    {
+        "gameId" : 1,
+            "playerId" : 1,
+            "pitId" : 0
+    }
+    */
+
+
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.bol.interviews.kalaha.dto;
 
 
+import com.bol.interviews.kalaha.model.Pit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class updateBoardDto {
     private long boardId;
     private int kalahaP1;
     private int kalahaP2;
-    private List<Integer> pitsP1;
-    private List<Integer> pitsP2;
+    private List<Pit> pitsP1;
+    private List<Pit> pitsP2;
 
 }

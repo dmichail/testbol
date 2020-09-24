@@ -1,9 +1,12 @@
 package com.bol.interviews.kalaha.model;
 
+import com.bol.interviews.kalaha.constants.constants.PlayerStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+
 
 @Entity(name = "Player")
 public class Player implements Serializable {
@@ -19,6 +22,8 @@ public class Player implements Serializable {
     @JsonProperty("playerName")
     private String playerName;
 
+    @JsonIgnore
+    private PlayerStatus playerStatus;
 
     public Player(){}
 
