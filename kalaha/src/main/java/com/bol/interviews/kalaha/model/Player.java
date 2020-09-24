@@ -1,16 +1,42 @@
 package com.bol.interviews.kalaha.model;
 
-public class Player {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
-    private final String name;
+@Entity(name = "Player")
+public class Player implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("playerId")
+    @Column(name = "playerId")
+    private long playerId;
+
+    @NotBlank(message = "Name is mandatory")
+    @Column(name="playerName")
+    @JsonProperty("playerName")
+    private String playerName;
+
+
+    public Player(){}
 
     public Player(String name)
     {
-        this.name = name;
+        this.playerName = name;
     }
 
-    public String getName()
+    public String getplayerName()
     {
-        return name;
+        return playerName;
     }
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public long getPlayerId() {
+        return playerId;
+    }
+
 }
