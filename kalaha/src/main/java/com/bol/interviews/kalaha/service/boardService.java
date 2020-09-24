@@ -49,8 +49,8 @@ public class boardService {
     void updateBoard(updateBoardDto updateBoardDto){
         Board currBoard = getBoardbyId(updateBoardDto.getBoardId()).get();
 
-        currBoard.setPits1(convertPitListToDB(updateBoardDto.getPitsP1()));
-        currBoard.setPits2(convertPitListToDB(updateBoardDto.getPitsP2()));
+        currBoard.setPits1(convertPitListToDB(getPlayer1Pits(currBoard.getBoardId())));
+        currBoard.setPits2(convertPitListToDB(getPlayer2Pits(currBoard.getBoardId())));
         currBoard.setK1(updateBoardDto.getKalahaP1());
         currBoard.setK2(updateBoardDto.getKalahaP2());
 
@@ -58,16 +58,16 @@ public class boardService {
 
     }
 
-    List<Integer> getPlayer1Pits(Long boardId){
+    List<Pit> getPlayer1Pits(Long boardId) {
         Optional<Board> current_board = boardRepository.findById(boardId);
 
-        return CoreUtils.convertPitDBtoList(current_board.get().getPits1());
+        return CoreUtils.convertPitDBtoList(current_board.get().getPits1(), Player1);
     }
 
-    List<Integer> getPlayer2Pits(Long boardId) {
+    List<Pit> getPlayer2Pits(Long boardId) {
         Optional<Board> current_board = boardRepository.findById(boardId);
 
-        return CoreUtils.convertPitDBtoList(current_board.get().getPits2());
+        return CoreUtils.convertPitDBtoList(current_board.get().getPits2(), Player2);
     }
 
 
