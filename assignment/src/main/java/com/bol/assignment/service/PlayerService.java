@@ -1,27 +1,28 @@
 package com.bol.assignment.service;
 
 
-import com.bol.assignment.dto.playerDto;
-import com.bol.assignment.exceptions.player.playerNotFoundException;
+import com.bol.assignment.exceptions.player.PlayerNotFoundException;
 import com.bol.assignment.model.Player;
-import com.bol.assignment.repository.playerRepository;
+import com.bol.assignment.repository.PlayerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.bol.assignment.constants.PlayerStatus;
+import com.bol.assignment.MyConstants.PlayerStatus;
 
 import java.util.List;
 
 @Service
-public class playerService {
+public class PlayerService {
 
-    @Autowired(required = false)
-    public playerRepository playerRepository;
+
+    @Autowired
+    public PlayerRepository playerRepository;
+
 
     ModelMapper modelMapper = new ModelMapper();
 
 
-    public playerDto addPlayer(String name){
+/*    public playerDto addPlayer(String name){
         Player player = new Player(name);
         playerRepository.save(player);
 
@@ -29,9 +30,23 @@ public class playerService {
 
         return playerDto;
     }
+    */
+
+    public Player addPlayer(String name){
+        Player player = new Player();
+        player.setName(name);
+        System.out.println("Im in");
+        playerRepository.save(player);
+
+/*
+        playerDto playerDto = modelMapper.map(player, com.bol.assignment.dto.playerDto.class);
+*/
+        System.out.println("broke");
+        return player;
+    }
 
     public Player getPlayerById(Long id){
-        return playerRepository.findById(id).orElseThrow(() -> new playerNotFoundException(id));
+        return playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
     }
 
     public void changePlayerStatus(Long playerId,PlayerStatus newStatus){

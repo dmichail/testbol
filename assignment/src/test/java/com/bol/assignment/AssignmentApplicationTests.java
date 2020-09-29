@@ -8,9 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class AssignmentApplicationTests {
 
-	@Test
-	public void createNewPlayer(){
-		Player player = new Player();
-	}
+
 
 }

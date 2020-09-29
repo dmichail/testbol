@@ -1,8 +1,8 @@
 package com.bol.assignment.exceptions.player;
 
-public class playerNotFoundException extends RuntimeException {
+public class PlayerNotFoundException extends RuntimeException {
 
-    public playerNotFoundException(Long id){
+    public PlayerNotFoundException(Long id){
         super("Could not find player with id "+ id);
     }
 }

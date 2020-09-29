@@ -1,7 +1,7 @@
 package com.bol.assignment.model;
 
 
-import com.bol.assignment.constants.PlayerStatus;
+import com.bol.assignment.MyConstants.PlayerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,14 +9,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "Player")
 public class Player implements Serializable {
 
     @Id
@@ -31,13 +30,6 @@ public class Player implements Serializable {
     @Column(name = "status")
     private PlayerStatus status;
 
-    @OneToMany(mappedBy = "ownerId")
-    private List<Pit> pitList;
 
-
-    public Player(String _name){
-        this.name = _name;
-        this.status = PlayerStatus.ONLINE;
-    }
 
 }

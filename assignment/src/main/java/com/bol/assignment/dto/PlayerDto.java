@@ -1,5 +1,7 @@
 package com.bol.assignment.dto;
 
+
+import com.bol.assignment.MyConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +13,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-public class addPlayerDto implements Serializable {
+public class PlayerDto implements Serializable {
 
-    private String playerName;
+    private long id;
+    private String name;
+    private MyConstants.PlayerStatus status;
 
 }
