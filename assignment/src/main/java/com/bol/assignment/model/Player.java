@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -29,6 +30,9 @@ public class Player implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PlayerStatus status;
+
+    @OneToMany(mappedBy = "ownerId")
+    private List<Pit> pitList;
 
 
 

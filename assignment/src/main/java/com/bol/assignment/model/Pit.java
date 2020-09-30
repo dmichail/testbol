@@ -26,14 +26,17 @@ public class Pit {
 
     @Column(name="posIdx")
     private int position;
+
     @Column(name = "stones")
     private int stones;
 
     @ManyToOne
-    @JoinColumn(name = "id")
-    private Player owner;
+    @JoinColumn(name = "ownerId", nullable = false)
+    private Player ownerId;
+
     @Column(name = "isKalaha")
     private boolean isKalaha;
+
     @Column(name = "stonesKalaha")
     @Nullable
     private int stonesKalaha;
@@ -42,7 +45,7 @@ public class Pit {
     public Pit(Integer position, Integer stones, Player owner, Boolean isKalaha, Integer stonesKalaha){
         this.position = position;
         this.stones = stones;
-        this.owner = owner;
+        this.ownerId = owner;
         this.isKalaha = isKalaha;
         this.stonesKalaha = stonesKalaha;
     }
@@ -51,7 +54,7 @@ public class Pit {
     public Pit(Integer position, Player owner, Boolean isKalaha) {
         this.position = position;
         this.stones = MyConstants.INIT_STONES_PIT;
-        this.owner = owner;
+        this.ownerId = owner;
         this.isKalaha = isKalaha;
         this.stonesKalaha = isKalaha ? MyConstants.INIT_STONES_KALHALA : null;
     }
