@@ -17,6 +17,7 @@ public class PitController {
     ModelMapper modelMapper = new ModelMapper();
 
 
+/*
     @PostMapping("/pits/")
     public Pit createPit(@RequestBody PitCreateDto pitCreateDto){
         Pit createdPit = pitService.addPit(pitCreateDto.getPosition(), pitCreateDto.getOwner(), pitCreateDto.getIsKalaha());
@@ -30,6 +31,7 @@ public class PitController {
 
         return found;
     }
+*/
 
 
 

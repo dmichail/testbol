@@ -2,6 +2,7 @@ package com.bol.assignment.model;
 
 
 import com.bol.assignment.MyConstants;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +31,6 @@ public class Pit {
     @Column(name = "stones")
     private int stones;
 
-    @ManyToOne
-    @JoinColumn(name = "ownerId", nullable = false)
-    private Player ownerId;
-
     @Column(name = "isKalaha")
     private boolean isKalaha;
 
@@ -41,20 +38,24 @@ public class Pit {
     @Nullable
     private int stonesKalaha;
 
+    @ManyToOne
+    @JoinColumn(name = "boardId", nullable = false)
+    private Board board;
 
-    public Pit(Integer position, Integer stones, Player owner, Boolean isKalaha, Integer stonesKalaha){
+
+    public Pit(Integer position, Integer stones, Board board, Boolean isKalaha, Integer stonesKalaha){
         this.position = position;
         this.stones = stones;
-        this.ownerId = owner;
+        this.board = board;
         this.isKalaha = isKalaha;
         this.stonesKalaha = stonesKalaha;
     }
 
 
-    public Pit(Integer position, Player owner, Boolean isKalaha) {
+    public Pit(Integer position, Board board, Boolean isKalaha) {
         this.position = position;
         this.stones = MyConstants.INIT_STONES_PIT;
-        this.ownerId = owner;
+        this.board = board;
         this.isKalaha = isKalaha;
         this.stonesKalaha = isKalaha ? MyConstants.INIT_STONES_KALHALA : null;
     }

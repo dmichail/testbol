@@ -31,9 +31,5 @@ public class Player implements Serializable {
     @Column(name = "status")
     private PlayerStatus status;
 
-    @OneToMany(mappedBy = "ownerId")
-    private List<Pit> pitList;
-
-
 
 }
