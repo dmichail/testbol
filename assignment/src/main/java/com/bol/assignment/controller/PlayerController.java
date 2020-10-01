@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Controller
@@ -19,14 +20,8 @@ public class PlayerController {
     @Autowired
     public PlayerService playerService;
 
-    /*@PostMapping("/players")
-    playerDto addPlayer(@RequestBody addPlayerDto addPlayerDto) {
-        return playerService.addPlayer(addPlayerDto.getName());
-    }*/
-
-
     @PostMapping("/players/")
-    Player addPlayer(@RequestBody AddPlayerDto addPlayerDto){
+    Player createPlayer(@RequestBody AddPlayerDto addPlayerDto){
         Player resultPlayer = playerService.addPlayer(addPlayerDto.getName());
         return resultPlayer;
     }
@@ -39,9 +34,9 @@ public class PlayerController {
         return new ResponseEntity<>(players, HttpStatus.FOUND);
     }
 
-    @PutMapping("/players/")
-    void updatePlayer(@RequestBody PlayerUpdateStatusDto newPlayer){
-        playerService.changePlayerStatus(newPlayer.getPlayerId(), newPlayer.getNewStatus());
+    @PutMapping("/players/{id}/status")
+    void updatePlayer(@RequestBody PlayerUpdateStatusDto newPlayer, @PathVariable(value = "id", required = true) Long id){
+        playerService.changePlayerStatus(id, newPlayer.getNewStatus());
     }
 
 

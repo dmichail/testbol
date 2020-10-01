@@ -35,13 +35,9 @@ public class PlayerService {
     public Player addPlayer(String name){
         Player player = new Player();
         player.setName(name);
-        System.out.println("Im in");
+        player.setStatus(PlayerStatus.ONLINE);
         playerRepository.save(player);
 
-/*
-        playerDto playerDto = modelMapper.map(player, com.bol.assignment.dto.playerDto.class);
-*/
-        System.out.println("broke");
         return player;
     }
 
@@ -51,6 +47,7 @@ public class PlayerService {
 
     public void changePlayerStatus(Long playerId,PlayerStatus newStatus){
         Player updatePlayer = getPlayerById(playerId);
+        updatePlayer.setStatus(newStatus);
         playerRepository.save(updatePlayer);
     }
 

@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Data
 public class PlayerUpdateStatusDto implements Serializable {
 
-    private long playerId;
     private MyConstants.PlayerStatus newStatus;
 
 }

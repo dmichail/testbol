@@ -32,4 +32,7 @@ public class Player implements Serializable {
     private PlayerStatus status;
 
 
+
+
+
 }
