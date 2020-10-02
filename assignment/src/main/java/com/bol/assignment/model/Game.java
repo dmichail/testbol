@@ -3,17 +3,13 @@ package com.bol.assignment.model;
 
 import javax.persistence.*;
 
-@Entity(name = "Game")
+@Entity
 public class Game {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private long id;
-
-    @OneToOne
-    @JoinColumn(name = "boardId", nullable = false)
-    private Board board;
 
     @ManyToOne
     @JoinColumn(name = "turnId", nullable = false)

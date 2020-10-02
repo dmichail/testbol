@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity(name = "Player")
+@Entity
 public class Player implements Serializable {
 
     @Id
@@ -30,6 +31,15 @@ public class Player implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private PlayerStatus status;
+
+    /*@Basic
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdTime;*/
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @PrimaryKeyJoinColumn
+    private PlayerState playerState;
+
 
 
 
