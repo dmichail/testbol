@@ -1,6 +1,6 @@
 package com.bol.assignment.service;
 
-
+import com.bol.assignment.MyConstants;
 import com.bol.assignment.MyConstants.*;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.GameState;
@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -30,7 +31,6 @@ public class GameService {
         this.gameStateService = gameStateService;
         this.playerService = playerService;
     }
-
 
     public Game createGame(Player loggedInPlayer){
         //Get loggedInPlayer
@@ -61,16 +61,12 @@ public class GameService {
         PlayerState loggedInState = playerStateService.createPlayerState(loggedInPlayer.getId());
         foundGame.getState().addPlayerState(loggedInState);
 
+        foundGame.setGameStatus(GameStatus.FULL);
+
         gameRepository.save(foundGame);
 
         return foundGame;
     }
-
-
-
-
-
-
 
     public Game getGameById(Long id){
        return gameRepository.findById(id).orElseThrow(() -> new RuntimeException("cant find game with id: " + id));
@@ -80,19 +76,10 @@ public class GameService {
         gameRepository.deleteById(id);
     }
 
-
-    public GameState playMove(Integer pit){
-        GameState gameState = new GameState();
-
-
-        return gameState;
-    }
-
-
-    public List<Game> getGamesByStatus(GameStatus gameStatus){
+    public Optional<Game> getFirstGameByStatus(GameStatus gameStatus){
         return gameRepository.findByGameStatus(gameStatus)
-                .stream().filter(game -> game.getGameStatus().toString() == gameStatus.toString())
-                .collect(Collectors.toList());
+                .stream().findFirst()
+                .filter(game -> game.getGameStatus().toString() == gameStatus.toString());
     }
 
     public void updateGameStatus(Long gameId, GameStatus newStatus){
@@ -101,6 +88,79 @@ public class GameService {
 
         gameRepository.save(foundGame);
     }
+
+    public GameState getGameStateByGameId(Long gameId){
+        Game foundgame = getGameById(gameId);
+
+        return foundgame.getState();
+    }
+
+    //region "Gameplay"
+
+    public boolean checkTurnValid(GameState gameState, String currentPlayerTurnID){
+        return gameState.getCurrPlayerID().equals(currentPlayerTurnID);
+    }
+
+
+    public boolean checkIfValidMove(Integer pit){
+        if (pit != MyConstants.P1_END_INDEX && pit != MyConstants.P2_END_INDEX
+        && pit >= MyConstants.P1_START_INDEX && pit <= MyConstants.P2_END_INDEX){
+            return true;
+        }
+        return false;
+    }
+
+    public void sowStones(GameState gameState, Integer pitId){
+        Map<Long, PlayerState> stateMap = gameState.getPlayerStateById();
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+    public GameState playMove(Long gameId,Integer pit){
+        GameState gameState = getGameStateByGameId(gameId);
+
+        if (checkIfValidMove(pit)){
+
+
+
+
+
+
+        }
+        else{
+            throw new RuntimeException("Not allowed move");
+        }
+
+        return gameState;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //endregion
+
 
 
 

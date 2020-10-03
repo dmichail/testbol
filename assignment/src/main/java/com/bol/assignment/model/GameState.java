@@ -37,7 +37,6 @@ public class GameState implements Serializable {
         this.playerStateById = playerStateById;
     }
 
-
     public void addPlayerState(PlayerState playerState){
         this.playerStateById.put(playerState.getId(), playerState);
     }

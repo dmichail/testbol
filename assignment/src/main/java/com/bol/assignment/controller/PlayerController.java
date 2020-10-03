@@ -21,9 +21,9 @@ public class PlayerController {
     public PlayerService playerService;
 
     @PostMapping("/players/")
-    Player createPlayer(@RequestBody AddPlayerDto addPlayerDto){
+    ResponseEntity<Player> createPlayer(@RequestBody AddPlayerDto addPlayerDto){
         Player resultPlayer = playerService.addPlayer(addPlayerDto.getName());
-        return resultPlayer;
+        return new ResponseEntity<>(resultPlayer, HttpStatus.CREATED);
     }
 
 

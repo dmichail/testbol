@@ -1,7 +1,7 @@
 package com.bol.assignment.controller;
 
 
-import com.bol.assignment.MyConstants;
+import com.bol.assignment.MyConstants.*;
 import com.bol.assignment.dto.PlayDto;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.GameState;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/games")
@@ -25,29 +26,30 @@ public class GameController {
     @PostMapping("/")
     public Game createOrJoinGame(Player loggedInPlayer){
 
-
-        //get current games with state awating for player
-        //if found, join player in it.
-        //if not, create new game and assign first player.
-
         Player testplayer = new  Player();
         testplayer.setId(1);
         testplayer.setName("baby");
-        testplayer.setStatus(MyConstants.PlayerStatus.ONLINE);
+        testplayer.setStatus(PlayerStatus.ONLINE);
 
 
+        Optional<Game> existingGame = gameService.getFirstGameByStatus(GameStatus.AWAITING_PLAYER);
 
-        return gameService.createGame(testplayer);
+
+        if (existingGame.isPresent()){
+            Game joinedGame = joinGame(loggedInPlayer, existingGame.get().getId());
+            return joinedGame;
+
+        }else{
+            return gameService.createGame(loggedInPlayer);
+        }
+
     }
 
-    @PostMapping("/join/{gameId}")
+    @PostMapping("/{gameId}/join")
     public Game joinGame(Player loggedin, @PathVariable(value = "gameId")Long gameid){
 
         Player newPlayer = new Player("mike");
         newPlayer.setId(2);
-
-
-
 
         return gameService.joinGame(gameid, newPlayer);
     }
@@ -66,15 +68,13 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/play")
-    public GameState play(@RequestBody PlayDto playDto){
-
-        return gameService.playMove(playDto.getPit());
+    public GameState play(@RequestBody PlayDto playDto, @PathVariable(value = "gameId") Long gameId){
+        return gameService.playMove(gameId, playDto.getPit());
     }
 
     @GetMapping("/allgames/")
-    public List<Game> getAll(){
-        return gameService.getGamesByStatus(MyConstants.GameStatus.AWAITING_PLAYER);
-
+    public Game getAll(){
+        return gameService.getFirstGameByStatus(GameStatus.AWAITING_PLAYER).orElseThrow(null);
     }
 
 
