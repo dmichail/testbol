@@ -4,22 +4,20 @@ package com.bol.assignment.controller;
 import com.bol.assignment.model.PlayerState;
 import com.bol.assignment.service.PlayerStateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/players/state")
+@RequestMapping("/players")
 public class PlayerStateController {
+
 
     @Autowired
     public PlayerStateService playerStateService;
 
 
-    @PostMapping("/")
-    public PlayerState createState(){
-        return playerStateService.createPlayerState();
+    @PostMapping("/{id}/states")
+    public PlayerState createState(@PathVariable(value = "id") Long id){
+        return playerStateService.createPlayerState(id);
     }
 
     @PutMapping("")

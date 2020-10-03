@@ -18,19 +18,7 @@ public class PlayerService {
     @Autowired
     public PlayerRepository playerRepository;
 
-
     ModelMapper modelMapper = new ModelMapper();
-
-
-/*    public playerDto addPlayer(String name){
-        Player player = new Player(name);
-        playerRepository.save(player);
-
-        playerDto playerDto = modelMapper.map(player, com.bol.assignment.dto.playerDto.class);
-
-        return playerDto;
-    }
-    */
 
     public Player addPlayer(String name){
         Player player = new Player();

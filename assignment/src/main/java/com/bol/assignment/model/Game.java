@@ -1,26 +1,43 @@
 package com.bol.assignment.model;
 
 
+import com.bol.assignment.MyConstants.GameStatus;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false)
+    @GeneratedValue
+    @Column(name = "id",nullable = false)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "turnId", nullable = false)
-    private Player playerTurn;
+    @Enumerated(EnumType.STRING)
+    private GameStatus gameStatus;
 
-    @Column(name = "isOver")
-    private boolean isOver;
+    @OneToMany
+    private List<Player> players;
 
-    @ManyToOne
-    @JoinColumn(name = "winnerId")
-    private Player winner;
+    @OneToOne(cascade = CascadeType.MERGE)
+    private GameState state;
+
+
+
+    public Game(GameStatus gameStatus, List<Player> players, GameState state){
+        this.gameStatus = gameStatus;
+        this.players = players;
+        this.state = state;
+    }
+
+
 
 }
 

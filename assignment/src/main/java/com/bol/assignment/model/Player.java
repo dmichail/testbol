@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "player")
 public class Player implements Serializable {
 
     @Id
@@ -32,13 +32,19 @@ public class Player implements Serializable {
     @Column(name = "status")
     private PlayerStatus status;
 
+
+/*    @OneToOne
+    @MapsId
+    private PlayerState playerState;*/
+
+
     /*@Basic
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTime;*/
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    /*@OneToOne
     @PrimaryKeyJoinColumn
-    private PlayerState playerState;
+    private PlayerState playerState;*/
 
 
 
