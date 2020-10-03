@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface GameRepository extends CrudRepository<Game, Long> {
 
-
-    /*List<Game> findGamesByStatus(GameStatus gameStatus);*/
+    List<Game> findByGameStatus(GameStatus gameStatus);
 
 }

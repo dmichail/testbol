@@ -38,6 +38,11 @@ public class Game {
     }
 
 
+    public void addPlayer(Player playerToAdd){
+        this.players.add(playerToAdd);
+    }
+
+
 
 }
 

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/games")
 public class GameController {
@@ -33,10 +35,22 @@ public class GameController {
         testplayer.setName("baby");
         testplayer.setStatus(MyConstants.PlayerStatus.ONLINE);
 
+
+
         return gameService.createGame(testplayer);
     }
 
+    @PostMapping("/join/{gameId}")
+    public Game joinGame(Player loggedin, @PathVariable(value = "gameId")Long gameid){
 
+        Player newPlayer = new Player("mike");
+        newPlayer.setId(2);
+
+
+
+
+        return gameService.joinGame(gameid, newPlayer);
+    }
 
     @GetMapping("/{gameId}")
     public Game getGameDetails(@PathVariable(value = "gameId")Long gameId){
@@ -56,6 +70,17 @@ public class GameController {
 
         return gameService.playMove(playDto.getPit());
     }
+
+    @GetMapping("/allgames/")
+    public List<Game> getAll(){
+        return gameService.getGamesByStatus(MyConstants.GameStatus.AWAITING_PLAYER);
+
+    }
+
+
+
+
+
 
 
 

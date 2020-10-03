@@ -1,7 +1,7 @@
 package com.bol.assignment.service;
 
 
-import com.bol.assignment.MyConstants;
+import com.bol.assignment.MyConstants.*;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.GameState;
 import com.bol.assignment.model.Player;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -33,6 +34,8 @@ public class GameService {
 
     public Game createGame(Player loggedInPlayer){
         //Get loggedInPlayer
+
+        //Get playerState
         PlayerState loggedInState = playerStateService.createPlayerState(loggedInPlayer.getId());
 
         //Create GameState
@@ -42,15 +45,30 @@ public class GameService {
         List<Player> playerList = new ArrayList<>();
         playerList.add(loggedInPlayer);
 
-        Game game = new Game();
-        game.setPlayers(playerList);
-        game.setGameStatus(MyConstants.GameStatus.AWAITING_PLAYER);
-        game.setState(currGameState);
-
+        Game game = new Game(GameStatus.AWAITING_PLAYER, playerList,currGameState);
         gameRepository.save(game);
 
         return game;
     }
+
+    public Game joinGame(Long gameId,Player loggedInPlayer){
+        //get game
+        Game foundGame = getGameById(gameId);
+
+        //add player and create new playerstatus
+        foundGame.addPlayer(loggedInPlayer);
+
+        PlayerState loggedInState = playerStateService.createPlayerState(loggedInPlayer.getId());
+        foundGame.getState().addPlayerState(loggedInState);
+
+        gameRepository.save(foundGame);
+
+        return foundGame;
+    }
+
+
+
+
 
 
 
@@ -71,10 +89,18 @@ public class GameService {
     }
 
 
-    /*public List<Game> getGamesByStatus(MyConstants.GameStatus gameStatus){
-        return gameRepository.findGamesByStatus(gameStatus);
+    public List<Game> getGamesByStatus(GameStatus gameStatus){
+        return gameRepository.findByGameStatus(gameStatus)
+                .stream().filter(game -> game.getGameStatus().toString() == gameStatus.toString())
+                .collect(Collectors.toList());
+    }
 
-    }*/
+    public void updateGameStatus(Long gameId, GameStatus newStatus){
+        Game foundGame = getGameById(gameId);
+        foundGame.setGameStatus(newStatus);
+
+        gameRepository.save(foundGame);
+    }
 
 
 

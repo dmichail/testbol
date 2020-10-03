@@ -47,7 +47,10 @@ public class Player implements Serializable {
     private PlayerState playerState;*/
 
 
-
+    public Player(String name){
+        this.name = name;
+        this.status = PlayerStatus.ONLINE;
+    }
 
 
 
