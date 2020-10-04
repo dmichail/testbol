@@ -16,8 +16,9 @@ public class MyConstants {
     public static final int P2_START_INDEX = 7;
     public static final int P2_END_INDEX = 13;
 
-    public static final List<Integer> initPits = Arrays.asList(6,6,6,6,6,6);
     public static final int initKalaha = 0;
+    public static final int limitKalaha = 7;
+    public static final List<Integer> initPits = Arrays.asList(6,6,6,6,6,6,initKalaha);
 
 
 

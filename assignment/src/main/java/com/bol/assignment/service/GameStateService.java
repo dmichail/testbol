@@ -27,7 +27,7 @@ public class GameStateService {
         Map<Long, PlayerState> stateMap = new HashMap<>();
         stateMap.put(playerState.getPlayer().getId(), playerState);
 
-        GameState gameState = new GameState(String.valueOf(playerState.getPlayer().getId()), null,
+        GameState gameState = new GameState(playerState.getPlayer().getId(), null,
                 false, stateMap);
 
         gameStateRepository.save(gameState);
@@ -35,4 +35,25 @@ public class GameStateService {
         return gameState;
 
     }
+
+    public void changeTurn(Long gameStateId,Long playerId){
+        GameState gameState = gameStateRepository.findById(gameStateId)
+                .orElseThrow(() -> new RuntimeException("Could not find gameState with id:" + gameStateId));
+
+        gameState.setCurrPlayerID(playerId);
+
+        gameStateRepository.save(gameState);
+    }
+
+    public GameState updateGameState(GameState gameState){
+        GameState gameState1 = gameStateRepository.findById(gameState.getId()).orElseThrow(() -> new RuntimeException("cant find gamestate"));
+
+        gameState1 = gameState;
+
+        gameStateRepository.save(gameState);
+
+        return gameState;
+    }
+
+
 }

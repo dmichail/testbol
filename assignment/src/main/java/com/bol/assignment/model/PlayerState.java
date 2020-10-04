@@ -47,4 +47,11 @@ public class PlayerState implements Serializable {
             pits = MyConstants.initPits;
     }
 
+    public List<Integer> combinePitsKalaha(){
+        this.pits.add(pits.size(), kalaha);
+        return this.pits;
+    }
+
+
+
 }

@@ -19,7 +19,7 @@ public class GameState implements Serializable {
     @JsonIgnore
     private long id;
 
-    private String currPlayerID;
+    private Long currPlayerID;
     private String winner;
     private boolean gameOver;
 
@@ -30,15 +30,15 @@ public class GameState implements Serializable {
 
 
 
-    public GameState(String currPlayerID, String winner, boolean gameOver, Map<Long, PlayerState> playerStateById){
+    public GameState(Long currPlayerID, String winner, boolean gameOver, Map<Long, PlayerState> playerStateById){
         this.currPlayerID = currPlayerID;
         this.winner = winner;
         this.gameOver = gameOver;
         this.playerStateById = playerStateById;
     }
 
-    public void addPlayerState(PlayerState playerState){
-        this.playerStateById.put(playerState.getId(), playerState);
+    public void addPlayerState(PlayerState playerState, Long playerId){
+        this.playerStateById.put(playerId, playerState);
     }
 
 }

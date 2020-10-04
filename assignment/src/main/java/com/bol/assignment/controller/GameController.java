@@ -36,11 +36,11 @@ public class GameController {
 
 
         if (existingGame.isPresent()){
-            Game joinedGame = joinGame(loggedInPlayer, existingGame.get().getId());
+            Game joinedGame = joinGame(testplayer, existingGame.get().getId());
             return joinedGame;
 
         }else{
-            return gameService.createGame(loggedInPlayer);
+            return gameService.createGame(testplayer);
         }
 
     }
