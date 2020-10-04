@@ -26,7 +26,6 @@ public class PlayerStateService {
 
     public PlayerState createPlayerState(Long playerId)
     {
-
         Player found = playerService.getPlayerById(playerId);
 
         PlayerState playerState = new PlayerState(initKalaha,initPits, found);

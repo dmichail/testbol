@@ -48,15 +48,13 @@ public class Game {
         return this.players.get(0).getId();
     }
 
-    /*public Long getSecondPlayerId(){
-        return this.players.get(1).getId();
-    }*/
 
-    public Long getCurrentPlayerId(){
-        return this.state.getCurrPlayerID();
+    @JsonIgnore
+    public String getCurrentPlayerName(){
+        Long playerId = this.state.getCurrPlayerID();
+        String playerName = this.players.get(Math.toIntExact(playerId)).getName();
+
+        return playerName;
     }
-
-
-
 }
 

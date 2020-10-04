@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -46,12 +44,5 @@ public class PlayerState implements Serializable {
         if (pits == null)
             pits = MyConstants.initPits;
     }
-
-    public List<Integer> combinePitsKalaha(){
-        this.pits.add(pits.size(), kalaha);
-        return this.pits;
-    }
-
-
 
 }

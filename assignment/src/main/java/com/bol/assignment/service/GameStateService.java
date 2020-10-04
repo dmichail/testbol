@@ -45,15 +45,5 @@ public class GameStateService {
         gameStateRepository.save(gameState);
     }
 
-    public GameState updateGameState(GameState gameState){
-        GameState gameState1 = gameStateRepository.findById(gameState.getId()).orElseThrow(() -> new RuntimeException("cant find gamestate"));
-
-        gameState1 = gameState;
-
-        gameStateRepository.save(gameState);
-
-        return gameState;
-    }
-
 
 }

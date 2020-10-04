@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public class PlayerService {
 
-
     @Autowired
     public PlayerRepository playerRepository;
 
@@ -42,9 +41,6 @@ public class PlayerService {
     public List<Player> getPlayers(){
         List<Player> playerList = (List<Player>) playerRepository.findAll();
         return playerList;
-
-
-
     }
 
 

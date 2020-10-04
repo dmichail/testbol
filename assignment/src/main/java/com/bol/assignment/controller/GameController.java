@@ -68,7 +68,7 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/play")
-    public GameState play(@RequestBody PlayDto playDto, @PathVariable(value = "gameId") Long gameId){
+    public Game play(@RequestBody PlayDto playDto, @PathVariable(value = "gameId") Long gameId){
         return gameService.playMove(gameId, playDto.getPit());
     }
 

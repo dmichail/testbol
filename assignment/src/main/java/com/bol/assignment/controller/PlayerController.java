@@ -35,7 +35,7 @@ public class PlayerController {
     }
 
     @PutMapping("/players/{id}/status")
-    void updatePlayer(@RequestBody PlayerUpdateStatusDto newPlayer, @PathVariable(value = "id", required = true) Long id){
+    void updatePlayer(@RequestBody PlayerUpdateStatusDto newPlayer, @PathVariable(value = "id") Long id){
         playerService.changePlayerStatus(id, newPlayer.getNewStatus());
     }
 
