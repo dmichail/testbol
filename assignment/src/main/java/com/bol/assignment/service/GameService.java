@@ -142,7 +142,7 @@ public class GameService {
         Map<Long, PlayerState> stateMap = currGameState.getPlayerStateById();
         Long player1ID = game.getPlayers().get(0).getId();
         Long player2ID = game.getPlayers().get(1).getId();
-        String currentPlayerName = game.getCurrentPlayerName();
+        /*String currentPlayerName = game.getCurrentPlayerName();*/
 
 
         List<Integer> p1Board = stateMap.get(player1ID).getPits();
@@ -169,7 +169,7 @@ public class GameService {
             flag = pitId+1;
             while (stonesHand > 0 && distanceTillEnd > 0){
                 Integer idxStones = p1Board.get(flag);
-                p1Board.set(flag,idxStones++);
+                p1Board.set(flag,++idxStones);
                 stonesHand--;
                 distanceTillEnd--;
                 flag++;
@@ -184,7 +184,7 @@ public class GameService {
                     if (flag == 6)
                         continue;
                     Integer idxStones = p2Board.get(flag);
-                    p2Board.set(flag, idxStones++);
+                    p2Board.set(flag, ++idxStones);
 
                     stonesHand--;
                     flag++;
@@ -236,7 +236,7 @@ public class GameService {
 
             if (isGameOver(updatedGame)){
                 updateGameStatus(updatedGame.getId(), GameStatus.FINISHED);
-                setWinner(updatedGame.getId(),currentPlayerName);
+                setWinner(updatedGame.getId(),player1ID.toString());
             }
 
             gameStateService.changeTurn(game.getState().getId(), player2ID);
@@ -326,7 +326,7 @@ public class GameService {
 
             if (isGameOver(updatedGame)){
                 updateGameStatus(updatedGame.getId(), GameStatus.FINISHED);
-                setWinner(updatedGame.getId(),currentPlayerName);
+                setWinner(updatedGame.getId(),player2ID.toString());
             }
 
             gameStateService.changeTurn(game.getState().getId(), player1ID);

@@ -15,6 +15,7 @@ import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Controller
+@RequestMapping("/v1")
 public class PlayerController {
 
     @Autowired
@@ -33,6 +34,8 @@ public class PlayerController {
 
         return new ResponseEntity<>(players, HttpStatus.FOUND);
     }
+
+
 
     @PutMapping("/players/{id}/status")
     void updatePlayer(@RequestBody PlayerUpdateStatusDto newPlayer, @PathVariable(value = "id") Long id){

@@ -1,9 +1,11 @@
 package com.bol.assignment.service;
 
 
+import com.bol.assignment.dto.PlayerDto;
 import com.bol.assignment.exceptions.player.PlayerNotFoundException;
 import com.bol.assignment.model.Player;
 import com.bol.assignment.repository.PlayerRepository;
+import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,19 @@ public class PlayerService {
 
     ModelMapper modelMapper = new ModelMapper();
 
+    public PlayerService(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
+    public Player addPlayer(PlayerDto playerDto){
+        Player player = new Player(playerDto.getName());
+        playerRepository.save(player);
+
+        return player;
+    }
+
     public Player addPlayer(String name){
-        Player player = new Player();
-        player.setName(name);
-        player.setStatus(PlayerStatus.ONLINE);
+        Player player = new Player(name);
         playerRepository.save(player);
 
         return player;

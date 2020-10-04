@@ -49,12 +49,12 @@ public class Game {
     }
 
 
-    @JsonIgnore
+    /*@JsonIgnore
     public String getCurrentPlayerName(){
         Long playerId = this.state.getCurrPlayerID();
         String playerName = this.players.get(Math.toIntExact(playerId)).getName();
 
         return playerName;
-    }
+    }*/
 }
 

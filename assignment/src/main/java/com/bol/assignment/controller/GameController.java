@@ -2,12 +2,17 @@ package com.bol.assignment.controller;
 
 
 import com.bol.assignment.MyConstants.*;
+import com.bol.assignment.dto.AddPlayerDto;
 import com.bol.assignment.dto.PlayDto;
+import com.bol.assignment.dto.loggedInUser;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.GameState;
 import com.bol.assignment.model.Player;
 import com.bol.assignment.service.GameService;
+import com.bol.assignment.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,43 +20,39 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/games")
+@RequestMapping("/v1/games")
 public class GameController {
 
     @Autowired
     public GameService gameService;
 
+    @Autowired
+    public PlayerService playerService;
+
 
 
     @PostMapping("/")
-    public Game createOrJoinGame(Player loggedInPlayer){
+    public ResponseEntity<Game> createOrJoinGame(@RequestBody loggedInUser loggedInPlayer){
 
-        Player testplayer = new  Player();
-        testplayer.setId(1);
-        testplayer.setName("baby");
-        testplayer.setStatus(PlayerStatus.ONLINE);
-
+        Player testplayer = playerService.getPlayerById(loggedInPlayer.getId());
 
         Optional<Game> existingGame = gameService.getFirstGameByStatus(GameStatus.AWAITING_PLAYER);
 
 
         if (existingGame.isPresent()){
-            Game joinedGame = joinGame(testplayer, existingGame.get().getId());
-            return joinedGame;
+            ResponseEntity<Game> joinedGame = joinGame(testplayer, existingGame.get().getId());
+            return new ResponseEntity(joinedGame, HttpStatus.OK);
 
         }else{
-            return gameService.createGame(testplayer);
+            return new ResponseEntity<>(gameService.createGame(testplayer), HttpStatus.CREATED);
         }
 
     }
 
     @PostMapping("/{gameId}/join")
-    public Game joinGame(Player loggedin, @PathVariable(value = "gameId")Long gameid){
+    public ResponseEntity<Game> joinGame(Player loggedin, @PathVariable(value = "gameId")Long gameid){
 
-        Player newPlayer = new Player("mike");
-        newPlayer.setId(2);
-
-        return gameService.joinGame(gameid, newPlayer);
+        return new ResponseEntity<>(gameService.joinGame(gameid, loggedin), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{gameId}")

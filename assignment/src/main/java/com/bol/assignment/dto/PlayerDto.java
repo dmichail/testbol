@@ -19,4 +19,10 @@ public class PlayerDto implements Serializable {
     private String name;
     private MyConstants.PlayerStatus status;
 
+    public PlayerDto(String name){
+        this.name = name;
+        this.status = MyConstants.PlayerStatus.ONLINE;
+    }
+
+
 }
