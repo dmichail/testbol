@@ -11,8 +11,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static com.bol.assignment.MyConstants.initKalaha;
 import static com.bol.assignment.MyConstants.initPits;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.junit.Assert.*;
 
@@ -32,10 +35,11 @@ public class PlayerStateServiceTest {
     public void init() {playerStateService = new PlayerStateService();}
 
     @Test
-    public void testCreateNewPlayerState(){
-        Player mockPlayer = new Player(0, "test", MyConstants.PlayerStatus.OFFLINE);
+    public void testCreateNewPlayerState() {
+        Player mockPlayer = mock(Player.class);
 
-        PlayerState result = playerStateService.createPlayerState(mockPlayer.getId());
+        PlayerState result = new PlayerState(initKalaha, initPits, mockPlayer);
+        doReturn(Optional.of(result)).when(playerStateRepositoryMock).findById(0l);
 
         assertEquals(result.getPlayer(), mockPlayer);
         assertEquals(result.getKalaha(), MyConstants.initKalaha);

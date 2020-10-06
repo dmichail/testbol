@@ -40,9 +40,6 @@ public class GameServiceTest {
     @Test
     public void testCreateNewGame(){
         Player mockPlayer = mock(Player.class);
-        mockPlayer.setId(1);
-
-        System.out.println(mockPlayer.getId());
 
         Game result = gameService.createGame(mockPlayer);
 
