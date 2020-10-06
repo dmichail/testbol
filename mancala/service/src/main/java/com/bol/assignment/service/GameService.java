@@ -9,17 +9,11 @@ import com.bol.assignment.model.GameState;
 import com.bol.assignment.model.Player;
 import com.bol.assignment.model.PlayerState;
 import com.bol.assignment.repository.GameRepository;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.id.IntegralDataTypeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import org.apache.commons.collections.ListUtils;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 @Service
@@ -244,7 +238,7 @@ public class GameService {
                 int last_index_pit = flag;
                 int last_index_stones = p1Board.get(last_index_pit);
                 if (last_index_stones == 1){
-                    int opponent_index = MyConstants.map_OppositePits.get(last_index_pit);
+                    int opponent_index = MyConstants.map_OppositePits_limit6.get(last_index_pit);
                     int opponent_stones = p2Board.get(opponent_index);
                     p1Board.set(opponent_index, 0);
                     p2Board.set(last_index_pit, 0);
@@ -330,7 +324,7 @@ public class GameService {
                 int last_index_pit = flag;
                 int last_index_stones = p2Board.get(last_index_pit);
                 if (last_index_stones == 1){
-                    int opponent_index = MyConstants.map_OppositePits.get(last_index_pit);
+                    int opponent_index = MyConstants.map_OppositePits_limit6.get(last_index_pit);
                     int opponent_stones = p1Board.get(opponent_index);
                     p1Board.set(opponent_index, 0);
                     p2Board.set(last_index_pit, 0);
@@ -414,60 +408,94 @@ public class GameService {
             stonesHand--;
         }
 
-        int size = completeBoard.size();
 
-        //split list in 2 seperate ones
-        List<Integer> p1Board = new ArrayList<>(completeBoard.subList(0, size /2 ));
-        List<Integer> p2Board = new ArrayList<>(completeBoard.subList(size/2, size));
+        if (checkCapturePieces(completeBoard, lastIndex, isP1turn)){
+           completeBoard = capture(completeBoard, lastIndex, isP1turn);
+        }
 
-        System.out.println("P1 - Board: "+ p1Board);
-        System.out.println("P2 - Board: "+ p2Board);
+        //another turn?
+        if (isP1turn && lastIndex == MyConstants.P1_END_INDEX) {
+            gameStateService.changeTurn(game.getState().getId(), player1ID);
+        } else if (!isP1turn && lastIndex == MyConstants.P2_END_INDEX) {
+            gameStateService.changeTurn(game.getState().getId(), player2ID);
+        }
 
-
-        currGameState.getPlayerStateById().get(player1ID).setPits(p1Board);
-        currGameState.getPlayerStateById().get(player1ID).setKalaha(p1Board.get(p1Board.size() -1));
-
-        currGameState.getPlayerStateById().get(player2ID).setPits(p2Board);
-        currGameState.getPlayerStateById().get(player2ID).setKalaha(p2Board.get(p2Board.size() -1));
-
-        Game updatedGame = updateGameStateByGameId(game.getId(), currGameState);
+        Game updatedGame = finishTurnAndSave(game, completeBoard, player1ID, player2ID);
 
         if (isGameOver(updatedGame)){
             updateGameStatus(updatedGame.getId(), GameStatus.FINISHED);
             setWinner(updatedGame.getId(),player1ID.toString());
         }
 
+        return updatedGame;
+    }
+
+    public Game finishTurnAndSave(Game game, List<Integer> completeBoard, Long p1ID, Long p2ID){
+        GameState currGameState = game.getState();
+
+        //split list in 2 seperate ones
+        List<Integer> p1Board = new ArrayList<>(completeBoard.subList(0, MyConstants.totalPits /2 ));
+        List<Integer> p2Board = new ArrayList<>(completeBoard.subList(MyConstants.totalPits/2, MyConstants.totalPits));
+
+        System.out.println("P1 - Board: "+ p1Board);
+        System.out.println("P2 - Board: "+ p2Board);
 
 
+        currGameState.getPlayerStateById().get(p1ID).setPits(p1Board);
+        currGameState.getPlayerStateById().get(p1ID).setKalaha(p1Board.get(MyConstants.P1_END_INDEX));
 
-        //checkMethod for Capture
+        currGameState.getPlayerStateById().get(p2ID).setPits(p2Board);
+        currGameState.getPlayerStateById().get(p2ID).setKalaha(p2Board.get(MyConstants.P2_END_INDEX));
 
-        //method for another turn
-
-
-
-        //throw error if lastIndex is still -1 .. code did not run
-
+        Game updatedGame = updateGameStateByGameId(game.getId(), currGameState);
 
 
-
-
-
-
-
-
-
-
-        return game;
+        return updatedGame;
     }
 
 
-    public void capturePieces(int lastIndex, boolean isP1turn) {
 
 
+    public boolean checkCapturePieces(List<Integer> currBoard, int lastIndex, boolean isP1turn) {
+        int lastPitStones = currBoard.get(lastIndex);
 
+        if (lastPitStones == 1) {
 
+            if (isP1turn && lastIndex <= MyConstants.P1_END_INDEX - 1){
+                return true;
+            }
+
+            if (!isP1turn && lastIndex >= MyConstants.P2_START_INDEX && lastIndex <=MyConstants.P2_END_INDEX - 1){
+                return true;
+            }
+        }
+
+        return false;
     }
+
+    public List<Integer> capture(List<Integer> currBoard, int lastIndex, boolean isP1turn) {
+        int lastPitStones = currBoard.get(lastIndex);
+        currBoard.set(lastIndex, 0);
+
+        int opponentIndex  = MyConstants.map_OppositePits.get(lastIndex);
+        int opponentStones = currBoard.get(opponentIndex);
+        int currKalaha;
+        int totalToAdd = lastPitStones + opponentStones;
+
+
+        if (isP1turn) {
+            currKalaha = currBoard.get(MyConstants.P1_END_INDEX);
+            currBoard.set(MyConstants.P1_END_INDEX, currKalaha + totalToAdd);
+        } else {
+            currKalaha = currBoard.get(MyConstants.P2_END_INDEX);
+            currBoard.set(MyConstants.P2_END_INDEX, currKalaha + totalToAdd);
+        }
+
+        return currBoard;
+    }
+
+
+
 
 
 

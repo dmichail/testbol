@@ -24,13 +24,28 @@ public class MyConstants {
 
     public static final List<Integer> initPits = Arrays.asList(6,6,6,6,6,6,initKalaha);
 
-    public static final Map<Integer, Integer> map_OppositePits = Map.of(
+    public static final Map<Integer, Integer> map_OppositePits_limit6 = Map.of(
             0, 5,
             1, 4,
             2, 3,
             3, 2,
             4, 1,
             5, 0
+    );
+
+    public static final Map<Integer, Integer> map_OppositePits = Map.ofEntries(
+            Map.entry(0,13),
+            Map.entry(1,12),
+            Map.entry(2,11),
+            Map.entry(3,10),
+            Map.entry(4,9),
+            Map.entry(5,8),
+            Map.entry(7,6),
+            Map.entry(8,5),
+            Map.entry(9,4),
+            Map.entry(10,3),
+            Map.entry(11,2),
+            Map.entry(12,1)
     );
 
 
