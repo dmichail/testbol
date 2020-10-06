@@ -125,12 +125,25 @@ public class GameService {
     }
 
 
+    //limit - 6
     public boolean checkIfValidMove(Integer pit){
         if (pit != MyConstants.limitBoard && pit >= 0 && pit <= MyConstants.limitBoard){
             return true;
         }
         return false;
     }
+
+
+    //limit - 13
+    public boolean isValidMove(Integer pit){
+        if (pit >= MyConstants.P1_START_INDEX && pit <= MyConstants.P2_END_INDEX
+            && pit != MyConstants.P1_END_INDEX && pit != MyConstants.P2_END_INDEX){
+            return true;
+        }
+
+        return false;
+    }
+
 
     public boolean isPlayer1Turn(Game currentGame)
     {
@@ -367,18 +380,20 @@ public class GameService {
         List<Integer> p1Board = getP1pits(game);
         List<Integer> p2Board = getP2pits(game);
 
-        List<Integer> completeBoard = ListUtils.union(p1Board, p2Board);
+        List<Integer> completeBoard = (List<Integer>) ListUtils.union(p1Board, p2Board);
 
         System.out.println(completeBoard);
 
-        if (isP1turn){
-            stonesHand = p1Board.get(pitId);
-        }else {
-            stonesHand = p2Board.get(pitId);
-        }
+        stonesHand = completeBoard.get(pitId);
+        completeBoard.set(pitId, 0);
 
         Integer lastIndex = -1;
+        Integer currIndex = pitId;
         while (stonesHand > 0){
+
+
+
+
 
 
 
@@ -412,7 +427,7 @@ public class GameService {
         Game game = getGameById(gameId);
 
         //Validate pitId is from 0 until 5 -  (kalaha = 6)
-        if (checkIfValidMove(pit) && game.getGameStatus() != GameStatus.FINISHED && checkTurnValid(game.getState(), game.getState().getCurrPlayerID())) {
+        if (isValidMove(pit) && game.getGameStatus() != GameStatus.FINISHED && checkTurnValid(game.getState(), game.getState().getCurrPlayerID())) {
             boolean isP1Turn = isPlayer1Turn(game);
 
             if (checkPitHasStones(game, pit, isP1Turn)){

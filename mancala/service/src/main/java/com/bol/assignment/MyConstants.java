@@ -20,6 +20,8 @@ public class MyConstants {
 
     public static final int initKalaha = 0;
     public static final int limitBoard = 6;
+    public static final int totalPits = 14;
+
     public static final List<Integer> initPits = Arrays.asList(6,6,6,6,6,6,initKalaha);
 
     public static final Map<Integer, Integer> map_OppositePits = Map.of(
