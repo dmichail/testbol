@@ -12,6 +12,5 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 public class LoggedInUser {
 
     private Long id;
-    private String name;
 
 }

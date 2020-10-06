@@ -131,9 +131,10 @@ public class GameService {
 
 
     //limit - 13
-    public boolean isValidMove(Integer pit){
-        if (pit >= MyConstants.P1_START_INDEX && pit <= MyConstants.P2_END_INDEX
-            && pit != MyConstants.P1_END_INDEX && pit != MyConstants.P2_END_INDEX){
+    public boolean isValidMove(Integer pit, boolean isP1turn){
+        if (pit >= MyConstants.P1_START_INDEX && pit < MyConstants.P1_END_INDEX && isP1turn) {
+            return true;
+        }else if (pit >= MyConstants.P2_START_INDEX && pit < MyConstants.P2_END_INDEX){
             return true;
         }
 
@@ -146,7 +147,7 @@ public class GameService {
         Long currentPlayerID = currentGame.getState().getCurrPlayerID();
         Long p1ID = currentGame.getFirstPlayerId();
 
-        if (currentPlayerID == p1ID){
+        if (currentPlayerID.equals(p1ID)){
             return true;
         }
         return false;
@@ -155,10 +156,12 @@ public class GameService {
     public boolean checkPitHasStones(Game game, Integer pit, Boolean isP1Turn){
         Integer stonesInPit;
 
+        List<Integer> tempBoard = (List<Integer>) ListUtils.union(getP1pits(game), getP2pits(game));
+
         if (isP1Turn){
-           stonesInPit = getP1pits(game).get(pit);
+           stonesInPit = tempBoard.get(pit);
         }else{
-           stonesInPit = getP2pits(game).get(pit);
+           stonesInPit = tempBoard.get(pit);
         }
 
         if (stonesInPit > 0){
@@ -166,6 +169,11 @@ public class GameService {
         }
         return false;
     }
+
+
+
+
+
 
     //TODO - Really Badly written method - Needs splitting in smaller methods - Duplicate code
     public Game sowStones(Game game, Integer pitId, boolean isP1turn){
@@ -383,14 +391,21 @@ public class GameService {
         stonesHand = completeBoard.get(pitId);
         completeBoard.set(pitId, 0);
 
+        System.out.println(stonesHand);
+
         Integer lastIndex = -1;
-        Integer currIndex = pitId;
+        Integer currIndex = pitId+1;
         while (stonesHand > 0){
+
+            if (currIndex == 14){
+                currIndex = 0;
+            }
 
             if (isP1turn && currIndex == MyConstants.P2_END_INDEX) {
                 //skip P2 kalaha
                 //restart loop
                 currIndex = 0;
+                System.out.println("mhdenise");
                 continue;
             }
 
@@ -399,26 +414,23 @@ public class GameService {
                 continue;
             }
 
+
+
             Integer currStones = completeBoard.get(currIndex);
 
-            completeBoard.set(currIndex, currStones++);
+            completeBoard.set(currIndex, ++currStones);
+            System.out.println(completeBoard);
 
-            lastIndex = currIndex;
-            currIndex++;
+            ++currIndex;
             stonesHand--;
         }
-
+        System.out.println(lastIndex);
+        lastIndex = currIndex;
 
         if (checkCapturePieces(completeBoard, lastIndex, isP1turn)){
            completeBoard = capture(completeBoard, lastIndex, isP1turn);
         }
 
-        //another turn?
-        if (isP1turn && lastIndex == MyConstants.P1_END_INDEX) {
-            gameStateService.changeTurn(game.getState().getId(), player1ID);
-        } else if (!isP1turn && lastIndex == MyConstants.P2_END_INDEX) {
-            gameStateService.changeTurn(game.getState().getId(), player2ID);
-        }
 
         Game updatedGame = finishTurnAndSave(game, completeBoard, player1ID, player2ID);
 
@@ -426,6 +438,29 @@ public class GameService {
             updateGameStatus(updatedGame.getId(), GameStatus.FINISHED);
             setWinner(updatedGame.getId(),player1ID.toString());
         }
+
+        //extra turn?
+        if (isP1turn && lastIndex == MyConstants.P1_END_INDEX) {
+            System.out.println("p1 another turn");
+            updatedGame.getState().setCurrPlayerID(player1ID);
+            gameStateService.changeTurn(updatedGame.getState().getId(), player1ID);
+        } else if (!isP1turn && lastIndex == MyConstants.P2_END_INDEX) {
+            System.out.println("p1 another turn");
+            updatedGame.getState().setCurrPlayerID(player2ID);
+            gameStateService.changeTurn(updatedGame.getState().getId(), player2ID);
+        } else if (isP1turn){
+            System.out.println("p1 changed turn. now p2");
+            updatedGame.getState().setCurrPlayerID(player2ID);
+            gameStateService.changeTurn(updatedGame.getState().getId(), player2ID);
+        } else{
+            System.out.println("p2 changed turn. now p1");
+            updatedGame.getState().setCurrPlayerID(player1ID);
+            gameStateService.changeTurn(updatedGame.getState().getId(), player1ID);
+        }
+
+
+
+
 
         return updatedGame;
     }
@@ -442,10 +477,10 @@ public class GameService {
 
 
         currGameState.getPlayerStateById().get(p1ID).setPits(p1Board);
-        currGameState.getPlayerStateById().get(p1ID).setKalaha(p1Board.get(MyConstants.P1_END_INDEX));
+        currGameState.getPlayerStateById().get(p1ID).setKalaha(p1Board.get(MyConstants.limitBoard));
 
         currGameState.getPlayerStateById().get(p2ID).setPits(p2Board);
-        currGameState.getPlayerStateById().get(p2ID).setKalaha(p2Board.get(MyConstants.P2_END_INDEX));
+        currGameState.getPlayerStateById().get(p2ID).setKalaha(p2Board.get(MyConstants.limitBoard));
 
         Game updatedGame = updateGameStateByGameId(game.getId(), currGameState);
 
@@ -501,13 +536,14 @@ public class GameService {
 
     public Game playMove(Long gameId,Integer pit) {
         Game game = getGameById(gameId);
+        boolean isP1Turn = isPlayer1Turn(game);
 
-        //Validate pitId is from 0 until 5 -  (kalaha = 6)
-        if (isValidMove(pit) && game.getGameStatus() != GameStatus.FINISHED && checkTurnValid(game.getState(), game.getState().getCurrPlayerID())) {
-            boolean isP1Turn = isPlayer1Turn(game);
+        System.out.println(isP1Turn);
+
+        if (isValidMove(pit,isP1Turn) && game.getGameStatus() != GameStatus.FINISHED && checkTurnValid(game.getState(), game.getState().getCurrPlayerID())) {
 
             if (checkPitHasStones(game, pit, isP1Turn)){
-                return sowStones(game, pit, isP1Turn);
+                return sowStonesNewMethod(game, pit, isP1Turn);
             }
 
         }

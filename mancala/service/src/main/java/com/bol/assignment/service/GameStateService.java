@@ -41,8 +41,6 @@ public class GameStateService {
         GameState gameState = gameStateRepository.findById(gameStateId)
                 .orElseThrow(() -> new GameStateNotFoundException(gameStateId));
 
-        gameState.setCurrPlayerID(playerId);
-
         gameStateRepository.save(gameState);
     }
 
