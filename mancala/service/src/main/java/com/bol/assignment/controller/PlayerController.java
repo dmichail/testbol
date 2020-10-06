@@ -15,29 +15,26 @@ import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/v1")
+@RequestMapping("/v1/players")
 public class PlayerController {
 
     @Autowired
     public PlayerService playerService;
 
-    @PostMapping("/players/")
+    @PostMapping("/")
     ResponseEntity<Player> createPlayer(@RequestBody AddPlayerDto addPlayerDto){
         Player resultPlayer = playerService.addPlayer(addPlayerDto.getName());
         return new ResponseEntity<>(resultPlayer, HttpStatus.CREATED);
     }
 
-
-    @GetMapping("/players/")
+    @GetMapping("/")
     ResponseEntity<List<Player>> getPlayers(){
         List<Player> players = playerService.getPlayers();
 
         return new ResponseEntity<>(players, HttpStatus.FOUND);
     }
 
-
-
-    @PutMapping("/players/{id}/status")
+    @PutMapping("/{id}/status")
     void updatePlayer(@RequestBody PlayerUpdateStatusDto newPlayer, @PathVariable(value = "id") Long id){
         playerService.changePlayerStatus(id, newPlayer.getNewStatus());
     }

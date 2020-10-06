@@ -10,6 +10,7 @@ import com.bol.assignment.service.PlayerService;
 import com.bol.assignment.service.PlayerStateService;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockSettings;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,9 @@ public class GameServiceTest {
     @Test
     public void testCreateNewGame(){
         Player mockPlayer = mock(Player.class);
+        mockPlayer.setId(1);
+
+        System.out.println(mockPlayer.getId());
 
         Game result = gameService.createGame(mockPlayer);
 

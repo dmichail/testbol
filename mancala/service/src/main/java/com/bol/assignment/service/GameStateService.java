@@ -2,6 +2,7 @@ package com.bol.assignment.service;
 
 
 import com.bol.assignment.MyConstants;
+import com.bol.assignment.exceptions.GameState.GameStateNotFoundException;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.GameState;
 import com.bol.assignment.model.Player;
@@ -36,9 +37,9 @@ public class GameStateService {
 
     }
 
-    public void changeTurn(Long gameStateId,Long playerId){
+    public void changeTurn(Long gameStateId,Long playerId) {
         GameState gameState = gameStateRepository.findById(gameStateId)
-                .orElseThrow(() -> new RuntimeException("Could not find gameState with id:" + gameStateId));
+                .orElseThrow(() -> new GameStateNotFoundException(gameStateId));
 
         gameState.setCurrPlayerID(playerId);
 

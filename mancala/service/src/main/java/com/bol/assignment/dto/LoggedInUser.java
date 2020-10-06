@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class loggedInUser {
+public class LoggedInUser {
 
     private Long id;
     private String name;

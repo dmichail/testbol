@@ -3,6 +3,7 @@ package com.bol.assignment.service;
 import com.bol.assignment.MyConstants;
 import com.bol.assignment.MyConstants.*;
 import com.bol.assignment.exceptions.game.GameNotFoundException;
+import com.bol.assignment.exceptions.player.PlayerAlreadyExistsException;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.GameState;
 import com.bol.assignment.model.Player;
@@ -53,9 +54,15 @@ public class GameService {
         return game;
     }
 
-    public Game joinGame(Long gameId,Player loggedInPlayer){
+    public Game joinGame(Long gameId,Player loggedInPlayer) throws PlayerAlreadyExistsException{
         Game foundGame = getGameById(gameId);
-        foundGame.addPlayer(loggedInPlayer);
+
+        //check if player exists already in the game
+        if (!foundGame.getPlayers().contains(loggedInPlayer)){
+            foundGame.addPlayer(loggedInPlayer);
+        }else{
+            throw new PlayerAlreadyExistsException(loggedInPlayer.getId());
+        }
 
         PlayerState loggedInState = playerStateService.createPlayerState(loggedInPlayer.getId());
         foundGame.getState().addPlayerState(loggedInState, loggedInPlayer.getId());
@@ -136,14 +143,27 @@ public class GameService {
         return false;
     }
 
+    public boolean checkPitHasStones(Game game, Integer pit, Boolean isP1Turn){
+        Integer stonesInPit;
+
+        if (isP1Turn){
+           stonesInPit = getP1pits(game).get(pit);
+        }else{
+           stonesInPit = getP2pits(game).get(pit);
+        }
+
+        if (stonesInPit > 0){
+            return true;
+        }
+        return false;
+    }
+
     //TODO - Really Badly written method - Needs splitting in smaller methods - Duplicate code
     public Game sowStones(Game game, Integer pitId, boolean isP1turn){
         GameState currGameState = game.getState();
         Map<Long, PlayerState> stateMap = currGameState.getPlayerStateById();
         Long player1ID = game.getPlayers().get(0).getId();
         Long player2ID = game.getPlayers().get(1).getId();
-        /*String currentPlayerName = game.getCurrentPlayerName();*/
-
 
         List<Integer> p1Board = stateMap.get(player1ID).getPits();
         List<Integer> p2Board = stateMap.get(player2ID).getPits();
@@ -339,12 +359,66 @@ public class GameService {
     }
 
 
+
+    public Game sowStonesNewMethod(Game game, Integer pitId, boolean isP1turn){
+        GameState currGameState = game.getState();
+        Integer stonesHand = -1;
+
+        List<Integer> p1Board = getP1pits(game);
+        List<Integer> p2Board = getP2pits(game);
+
+        List<Integer> completeBoard = ListUtils.union(p1Board, p2Board);
+
+        System.out.println(completeBoard);
+
+        if (isP1turn){
+            stonesHand = p1Board.get(pitId);
+        }else {
+            stonesHand = p2Board.get(pitId);
+        }
+
+        Integer lastIndex = -1;
+        while (stonesHand > 0){
+
+
+
+
+
+
+            stonesHand--;
+        }
+
+
+        //throw error if lastIndex is still -1 .. code did not run
+
+
+
+
+
+
+
+
+
+
+
+        return game;
+    }
+
+
+
+
+
     public Game playMove(Long gameId,Integer pit) {
         Game game = getGameById(gameId);
 
         //Validate pitId is from 0 until 5 -  (kalaha = 6)
         if (checkIfValidMove(pit) && game.getGameStatus() != GameStatus.FINISHED && checkTurnValid(game.getState(), game.getState().getCurrPlayerID())) {
-            return sowStones(game, pit, isPlayer1Turn(game));
+            boolean isP1Turn = isPlayer1Turn(game);
+
+            if (checkPitHasStones(game, pit, isP1Turn)){
+                return sowStones(game, pit, isP1Turn);
+            }
+
         }
         //do nothing
         return game;
