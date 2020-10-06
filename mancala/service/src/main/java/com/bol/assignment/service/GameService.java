@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import org.apache.commons.collections.ListUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -376,11 +378,11 @@ public class GameService {
     public Game sowStonesNewMethod(Game game, Integer pitId, boolean isP1turn){
         GameState currGameState = game.getState();
         Integer stonesHand = -1;
+        Long player1ID = game.getPlayers().get(0).getId();
+        Long player2ID = game.getPlayers().get(1).getId();
 
-        List<Integer> p1Board = getP1pits(game);
-        List<Integer> p2Board = getP2pits(game);
 
-        List<Integer> completeBoard = (List<Integer>) ListUtils.union(p1Board, p2Board);
+        List<Integer> completeBoard = (List<Integer>) ListUtils.union(getP1pits(game), getP2pits(game));
 
         System.out.println(completeBoard);
 
@@ -391,17 +393,57 @@ public class GameService {
         Integer currIndex = pitId;
         while (stonesHand > 0){
 
+            if (isP1turn && currIndex == MyConstants.P2_END_INDEX) {
+                //skip P2 kalaha
+                //restart loop
+                currIndex = 0;
+                continue;
+            }
 
+            if (!isP1turn && currIndex == MyConstants.P1_END_INDEX) {
+                //skil P1 kalaha in P2's turns
+                continue;
+            }
 
+            Integer currStones = completeBoard.get(currIndex);
 
+            completeBoard.set(currIndex, currStones++);
 
-
-
-
-
-
+            lastIndex = currIndex;
+            currIndex++;
             stonesHand--;
         }
+
+        int size = completeBoard.size();
+
+        //split list in 2 seperate ones
+        List<Integer> p1Board = new ArrayList<>(completeBoard.subList(0, size /2 ));
+        List<Integer> p2Board = new ArrayList<>(completeBoard.subList(size/2, size));
+
+        System.out.println("P1 - Board: "+ p1Board);
+        System.out.println("P2 - Board: "+ p2Board);
+
+
+        currGameState.getPlayerStateById().get(player1ID).setPits(p1Board);
+        currGameState.getPlayerStateById().get(player1ID).setKalaha(p1Board.get(p1Board.size() -1));
+
+        currGameState.getPlayerStateById().get(player2ID).setPits(p2Board);
+        currGameState.getPlayerStateById().get(player2ID).setKalaha(p2Board.get(p2Board.size() -1));
+
+        Game updatedGame = updateGameStateByGameId(game.getId(), currGameState);
+
+        if (isGameOver(updatedGame)){
+            updateGameStatus(updatedGame.getId(), GameStatus.FINISHED);
+            setWinner(updatedGame.getId(),player1ID.toString());
+        }
+
+
+
+
+        //checkMethod for Capture
+
+        //method for another turn
+
 
 
         //throw error if lastIndex is still -1 .. code did not run
@@ -420,6 +462,12 @@ public class GameService {
     }
 
 
+    public void capturePieces(int lastIndex, boolean isP1turn) {
+
+
+
+
+    }
 
 
 
