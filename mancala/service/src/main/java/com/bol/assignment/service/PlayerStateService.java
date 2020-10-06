@@ -36,7 +36,7 @@ public class PlayerStateService {
 
 
     public PlayerState getStateById(Long playerId){
-        return playerStateRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Could not find player State"));
+        return playerStateRepository.findById(playerId).orElseThrow(() -> new RuntimeException("Could not find player State with id: " + playerId));
     }
 
     public PlayerState updateState(Long playerId, PlayerState updateState){

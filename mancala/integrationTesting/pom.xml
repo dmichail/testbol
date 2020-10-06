@@ -16,5 +16,13 @@
 
     <artifactId>integrationTesting</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>6.8.0</version>
+        </dependency>
+    </dependencies>
+
 
 </project>

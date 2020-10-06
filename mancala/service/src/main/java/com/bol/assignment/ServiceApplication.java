@@ -25,6 +25,7 @@ public class ServiceApplication {
 				playerRepository.save(new Player("Jennifer"));
 				playerRepository.save(new Player("Margot"));
 
+
 		};
 	}
 
