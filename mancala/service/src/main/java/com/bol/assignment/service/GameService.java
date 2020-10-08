@@ -50,7 +50,7 @@ public class GameService {
         return game;
     }
 
-    public Game joinGame(Long gameId,Player loggedInPlayer) throws PlayerAlreadyExistsException{
+    public Game joinGame(Long gameId, Player loggedInPlayer) throws PlayerAlreadyExistsException{
         Game foundGame = getGameById(gameId);
 
         //check if player exists already in the game
@@ -330,8 +330,6 @@ public class GameService {
     public Game playMove(Long gameId,Integer pit) {
         Game game = getGameById(gameId);
         boolean isP1Turn = isPlayer1Turn(game);
-
-        System.out.println(isP1Turn);
 
         if (isValidMove(pit,isP1Turn) && game.getGameStatus() != GameStatus.FINISHED && checkTurnValid(game.getState(), game.getState().getCurrPlayerID())) {
 

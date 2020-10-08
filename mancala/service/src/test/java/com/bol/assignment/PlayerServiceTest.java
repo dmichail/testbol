@@ -1,7 +1,7 @@
 package com.bol.assignment;
 
 
-import com.bol.assignment.dto.PlayerDto;
+import com.bol.assignment.requestObjects.PlayerRequest;
 import com.bol.assignment.model.Player;
 import com.bol.assignment.repository.PlayerRepository;
 import com.bol.assignment.service.PlayerService;
@@ -31,9 +31,9 @@ public class PlayerServiceTest {
 
     @Test
     public void testCreatePlayer(){
-        PlayerDto playerDto = new PlayerDto("mike");
+        PlayerRequest playerRequest = new PlayerRequest("mike");
 
-        Player result = playerService.addPlayer(playerDto);
+        Player result = playerService.addPlayer(playerRequest);
 
         assertEquals(result.getName(), "mike");
         assertEquals(result.getStatus(), MyConstants.PlayerStatus.ONLINE);

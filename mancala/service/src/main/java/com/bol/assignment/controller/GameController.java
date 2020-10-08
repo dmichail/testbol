@@ -2,8 +2,8 @@ package com.bol.assignment.controller;
 
 
 import com.bol.assignment.MyConstants.*;
-import com.bol.assignment.dto.PlayDto;
-import com.bol.assignment.dto.LoggedInUser;
+import com.bol.assignment.requestObjects.PlayRequest;
+import com.bol.assignment.requestObjects.LoggedInUserRequest;
 import com.bol.assignment.model.Game;
 import com.bol.assignment.model.Player;
 import com.bol.assignment.service.GameService;
@@ -28,8 +28,10 @@ public class GameController {
         this.playerService = playerService;
     }
 
+
+
     @PostMapping("/")
-    public ResponseEntity<Game> createOrJoinGame(@RequestBody LoggedInUser loggedInPlayer){
+    public ResponseEntity<Game> createOrJoinGame(@RequestBody LoggedInUserRequest loggedInPlayer){
 
         Player testPlayer = playerService.getPlayerById(loggedInPlayer.getId());
 
@@ -45,7 +47,6 @@ public class GameController {
 
     }
 
-    @PostMapping("/{gameId}/join")
     public ResponseEntity<Game> joinGame(Player loggedIn, @PathVariable(value = "gameId")Long gameId){
         return new ResponseEntity<>(gameService.joinGame(gameId, loggedIn), HttpStatus.ACCEPTED);
     }
@@ -61,7 +62,7 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/play")
-    public Game play(@RequestBody PlayDto playDto, @PathVariable(value = "gameId") Long gameId){
+    public Game play(@RequestBody PlayRequest playDto, @PathVariable(value = "gameId") Long gameId){
         return gameService.playMove(gameId, playDto.getPit());
     }
 

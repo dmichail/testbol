@@ -1,4 +1,4 @@
-package com.bol.assignment.dto;
+package com.bol.assignment.requestObjects;
 
 
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PlayerStateDto {
+public class PlayerStateRequest {
 
     private int kalaha;
     private List<Integer> pits;

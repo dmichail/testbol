@@ -1,15 +1,14 @@
-package com.bol.assignment.dto;
+package com.bol.assignment.requestObjects;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class LoggedInUser {
+public class LoggedInUserRequest {
 
     private Long id;
 

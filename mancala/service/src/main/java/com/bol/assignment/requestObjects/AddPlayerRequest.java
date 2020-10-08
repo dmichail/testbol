@@ -1,17 +1,12 @@
-package com.bol.assignment.dto;
+package com.bol.assignment.requestObjects;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class AddPlayerDto implements Serializable {
+
+public class AddPlayerRequest{
 
     public String getName() {
         return name;
